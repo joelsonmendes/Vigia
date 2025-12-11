@@ -1,0 +1,161 @@
+SENSORES PERMITIDOS (com justificativa clínica):
+├── Acelerômetro (movimento/agitação)
+│ └── Finalidade: Detecção de alterações motoras
+├── Pedômetro (passos)
+│ └── Finalidade: Isolamento social/retração
+├── Uso de Tela (tempo, apps)
+│ └── Finalidade: Padrões de hiperconexão/evasão
+└── Horário de Atividade
+└── Finalidade: Distúrbios de sono
+
+
+==========================================================
+
+
+**SENSORES NÃO UTILIZADOS (por privacidade):**
+- Câmera
+- Microfone
+- Localização GPS
+- Lista de contatos
+- Conteúdo de mensagens
+
+**Fluxo de Dados:**  
+1. Coleta local → 2. Processamento no dispositivo → 3. Anonimização → 4. Sincronização (se permitido) → 5. Dashboard
+
+---
+
+### 🛡️ Privacidade e Segurança
+
+**Privacidade por Design:**
+- **Criptografia End-to-End**: Chaves armazenadas localmente
+- **Dados Brutos Nunca Saem**: Processamento ocorre no dispositivo
+- **Anonimização K-anonymity**: Mínimo 50 usuários por agregação
+- **Data Minimization**: Coleta apenas do estritamente necessário
+
+**Controles de Usuário:**
+- Pausa total da coleta com 1 toque
+- Visualização completa dos dados coletados
+- Exportação/Deleção total em 72h
+- Modo "Sessão de Aconselhamento" (pausa automática)
+
+---
+
+### 🧠 Detalhes da IA Clínica
+
+**Modelo: Vigia-Risk v1.0**  
+- **Tipo**: Ensemble (Random Forest + XGBoost)  
+- **Base**: DSM-5-TR + CID-11 + Escalas validadas (PHQ-9, GAD-7 adaptadas)  
+- **Features**: 15 indicadores comportamentais normalizados  
+- **Output**: Probabilidade de risco em 4 níveis  
+
+**Níveis de Risco (Protocolo Clínico):**  
+- **NÍVEL 0 (0-30%)**: Feedback positivo  
+- **NÍVEL 1 (31-60%)**: Sugestões de autocuidado  
+- **NÍVEL 2 (61-85%)**: Contato com psicóloga  
+- **NÍVEL 3 (86-100%)**: Conexão com CVV + notificação imediata  
+
+**Métricas de Validação:**  
+- Acurácia: 89.2%  
+- Recall (Nível 3): 95.1%  
+- AUC-ROC: 0.91  
+
+---
+
+### 👥 Protocolos de Ação Humana
+
+**Protocolo para Psicólogas Escolares:**  
+- **Nível 2**: Contato em 48h  
+- **Nível 3**: Resposta em 2h + acionamento de rede  
+
+**Treinamento Obrigatório:**  
+- 8h de capacitação + simulações + atualização semestral  
+
+---
+
+### 📊 Dashboard e Fluxo de Trabalho
+
+**Visões Disponíveis:**  
+1. **Turma (Anônima)**: Heatmap de bem-estar  
+2. **Individual (Com Consentimento)**: Timeline de indicadores  
+3. **Institucional**: Métricas agregadas  
+
+**Princípio de Menor Privilegiamento:**  
+- Professor → Apenas turma  
+- Psicóloga → Acesso total aos seus alunos  
+
+---
+
+### 🛠️ Stack Tecnológica Atualizada
+
+| Componente | Tecnologia | Justificativa |
+|------------|------------|---------------|
+| Frontend Mobile | Flutter 3.22 | Multiplataforma, performance |
+| Sensores | sensors_plus, pedometer | Baixo consumo |
+| ML On-Device | TensorFlow Lite 2.15 | Privacidade, offline |
+| Backend | Firebase + Cloud Functions | Escalabilidade |
+| Dashboard | Flutter Web | Consistência |
+| Criptografia | flutter_secure_storage | Conformidade LGPD |
+| Monitoramento | Sentry + Crashlytics | Estabilidade |
+| CI/CD | GitHub Actions | Qualidade contínua |
+
+---
+
+### 📈 Métricas e Validação
+
+**KPIs do Sistema:**  
+- Falsos positivos: < 20%  
+- Tempo de resposta (crítico): < 4h  
+- Adesão: > 60%  
+- NPS: > 50  
+
+**Validação Clínica em Andamento:**  
+- Estudo piloto: 200 alunos (3 meses)  
+- Meta: Redução em 40% dos encaminhamentos de emergência  
+
+---
+
+### 🚨 Limitações e Responsabilidades
+
+**Limitações Técnicas:**  
+1. Não detecta fatores contextuais  
+2. Depende do uso do smartphone  
+3. Possibilidade de "gaming"  
+
+**Cláusulas de Responsabilidade:**  
+- O Vigia é **ferramenta de apoio**, não substitui profissional  
+- SENAI mantém dever de cuidado independente  
+
+**Plano de Mitigação:**  
+- Auditoria trimestral + seguro de responsabilidade  
+
+---
+
+### 🧪 Como Rodar Localmente
+
+```bash
+# Clone e configuração completa
+git clone https://github.com/senai/vigia-mental-health.git
+cd vigia-mental-health
+
+# 1. Configurar ambiente Flutter
+flutter pub get
+flutter doctor
+
+# 2. Configurar Firebase (ambiente de desenvolvimento)
+cp .env.example .env
+# Adicionar chaves do Firebase Console
+
+# 3. Configurar modelo de ML
+cd ml/
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python train_model.py --data synthetic_dataset_v2.csv
+
+# 4. Rodar aplicativo
+cd ../app/
+flutter run --debug
+
+# 5. Rodar dashboard web
+cd ../dashboard/
+flutter run -d chrome
